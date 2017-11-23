@@ -4,5 +4,4 @@ class cconnect {
 public:
 	cconnect();
 	std::string cconnect::connector(std::string url);
-
 };

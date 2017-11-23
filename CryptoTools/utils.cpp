@@ -10,7 +10,7 @@ int utils::cryptoValue(double cryptoAmount, double cryptoValue) {
 
 	convert = cryptoValue * cryptoAmount;
 
-	std::cout << convert << std::endl;
+	std::cout << "\n$" << convert << std::endl;
 
 	return 0;
 }
