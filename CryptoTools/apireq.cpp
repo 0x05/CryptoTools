@@ -51,7 +51,7 @@ double apireq::getBinaPair(string const &pair) {
 		for (const auto &elem : pairMap) {
 			if (elem.first == pair) {
 				targetPrice = elem.second;
-				cout << elem.second;
+				cout << std::fixed << std::setprecision(8) << elem.second;
 			}
 		}
 	} else {
