@@ -3,7 +3,7 @@
 #include <iostream>
 
 
-//bitcoin amount * bitcoin value in usd
+//bitcoin amount * bitcoin value in usd - only works for USDT pairs for now
 utils::utils(){}
 int utils::cryptoValue(double cryptoAmount, double cryptoValue) {
 	double convert;

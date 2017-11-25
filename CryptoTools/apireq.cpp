@@ -17,6 +17,7 @@ int apireq::getBinaAll(){
 	cconnect getAll;
 	string requestData = getAll.connector(BINANCE_HOST + "api/v1/ticker/allPrices");
 
+	// cURL request to json object
 	std::stringstream ss;
 	ss << requestData;
 	json j = json::parse(ss);
@@ -35,8 +36,9 @@ int apireq::getBinaAll(){
 	return 0;
 }
 
+// Get price of a single pair
 double apireq::getBinaPair(string const &pair) {
-
+	// Validate input
 	std::regex validPair(R"([A-Z]{4,10})");
 	std::smatch match;
 

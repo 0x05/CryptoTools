@@ -56,7 +56,6 @@ int main() {
 	
 	curl_global_cleanup();
 	return 0;
-
 }
 
 
