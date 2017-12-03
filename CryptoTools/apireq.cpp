@@ -36,6 +36,42 @@ int apireq::getBinaAll(){
 	return 0;
 }
 
+//bid[0](green)=latest asks=red
+int apireq::getPairBids(string const &pair) {
+
+	std::regex validPair(R"([A-Z]{4,10})");
+	std::smatch match;
+
+	if (regex_search(pair, match, validPair)) {
+
+		cconnect getAll;
+		string requestData = getAll.connector(BINANCE_HOST + "api/v1/depth?symbol=" + pair + "&limit=5");
+
+		// cURL request to json object
+		std::stringstream ss;
+		ss << requestData;
+		json j = json::parse(ss);
+
+		//cout << j << endl;
+		//cout << "asks:" << j["asks"][0][0] << endl;
+		//cout << "bids:" << j["bids"][0][0] << endl;
+		//todo: fix var names, loop all pairs, list by biggest variance, check volume smh
+		string s2 = j["asks"][0][0];
+		string s1 = j["bids"][0][0];
+		double d1 = std::stod(s1);
+		double d2 = std::stod(s2);
+
+		double variance = d2 - d1;
+
+		cout << std::fixed << std::setprecision(8) << variance << endl;
+	}
+	else {
+		cout << "Invalid Pair" << endl;
+	}
+
+	return 0;
+}
+
 // Get price of a single pair
 double apireq::getBinaPair(string const &pair) {
 	// Validate input

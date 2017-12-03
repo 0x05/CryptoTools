@@ -6,6 +6,7 @@ public:
 	apireq();
 	int getBinaAll();
 	double getBinaPair(std::string const &pair);
+	int getPairBids(std::string const &pair);
 	void listBinaSymbols();
 private:
 	std::string BINANCE_HOST = "https://www.binance.com/";

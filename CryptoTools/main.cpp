@@ -25,7 +25,8 @@ int main() {
 	while (!done) {	
 		cout << "\n1. Request pair price" << endl;
 		cout << "2. Crypto to USD" << endl;
-		cout << "3. List symbols\n4. Quit" << endl;
+		cout << "3. Bid Variance" << endl;
+		cout << "4. List symbols\n5. Quit" << endl;
 		cout << ">";
 		cin >> option;
 		cout << ">";
@@ -43,9 +44,14 @@ int main() {
 			util.cryptoValue(amount, api.getBinaPair(pair));
 			break;
 		case '3':
-			api.listBinaSymbols();
+			cout << "Pair: ";
+			cin >> pair;
+			api.getPairBids(pair);
 			break;
 		case '4':
+			api.listBinaSymbols();
+			break;
+		case '5':
 			done = true;
 			break;
 		default:
