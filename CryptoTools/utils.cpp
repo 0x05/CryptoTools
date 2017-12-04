@@ -15,6 +15,12 @@ int utils::cryptoValue(double cryptoAmount, double cryptoValue) {
 	return 0;
 }
 
+//int utils::setBmark() {
+	//user types pairs he wants bookmarked - save to array/file for display and
+	//reuse with api functions
+//}
+
+
 /*
 Percentage difference equals the absolute value of the change in value
 divided by the average of the 2 numbers, all multiplied by 100.
