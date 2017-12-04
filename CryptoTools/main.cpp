@@ -20,7 +20,7 @@ int main() {
 	std::string pair;
 	double amount;
 
-	cout << "::CryptoTools:: (v0.1.3)" << endl;
+	cout << "::CryptoTools:: (v0.1.5)" << endl;
 
 	while (!done) {	
 		cout << "\n1. Request pair price" << endl;
@@ -44,9 +44,7 @@ int main() {
 			util.cryptoValue(amount, api.getBinaPair(pair));
 			break;
 		case '3':
-			cout << "Pair: ";
-			cin >> pair;
-			api.getPairBids(pair);
+			api.getPairBids();
 			break;
 		case '4':
 			api.listBinaSymbols();

@@ -22,10 +22,10 @@ int apireq::getBinaAll(){
 	ss << requestData;
 	json j = json::parse(ss);
 
-	int n = j.size();
+	BINANCE_PAIR_NUMBER = j.size();
 
 	// Create a map with symbol-price pairs
-	for (int i = 0; i < n; i++) {
+	for (int i = 0; i < BINANCE_PAIR_NUMBER; i++) {
 		string sym = j[i]["symbol"];
 		string sPrice = j[i]["price"];
 		dPrice = std::stod(sPrice);
@@ -36,39 +36,51 @@ int apireq::getBinaAll(){
 	return 0;
 }
 
-//bid[0](green)=latest asks=red
-int apireq::getPairBids(string const &pair) {
+//bid[0](green)=latest asks=red ~ threads could be useful
+int apireq::getPairBids() {
 
-	std::regex validPair(R"([A-Z]{4,10})");
-	std::smatch match;
+	getBinaAll();
 
-	if (regex_search(pair, match, validPair)) {
+	cconnect getAll;
+	string requestData;
+	int cnt = 0;
 
-		cconnect getAll;
-		string requestData = getAll.connector(BINANCE_HOST + "api/v1/depth?symbol=" + pair + "&limit=5");
+	for (const auto &elem : pairMap) {
+		// skip buggy entries
+		if (elem.first == "123456" || elem.first == "BTMETH" 
+			|| elem.first == "ELCBTC" || elem.first == "ETC"
+			|| elem.first == "HCCBTC" || elem.first == "LLTBTC") {
+			continue;
+		}
 
-		// cURL request to json object
+		requestData = getAll.connector(BINANCE_HOST + "api/v1/depth?symbol=" + elem.first + "&limit=5");
+
 		std::stringstream ss;
 		ss << requestData;
 		json j = json::parse(ss);
+		
+		string sBid = j["bids"][0][0];
+		string sAsk = j["asks"][0][0];
+		double bid = std::stod(sBid);
+		double ask = std::stod(sAsk);
+		
+		double variance = ask - bid;
 
-		//cout << j << endl;
-		//cout << "asks:" << j["asks"][0][0] << endl;
-		//cout << "bids:" << j["bids"][0][0] << endl;
-		//todo: fix var names, loop all pairs, list by biggest variance, check volume smh
-		string s2 = j["asks"][0][0];
-		string s1 = j["bids"][0][0];
-		double d1 = std::stod(s1);
-		double d2 = std::stod(s2);
+		varianceMap.insert(std::make_pair(elem.first, variance));
 
-		double variance = d2 - d1;
+		cout << "\r>Processing " << elem.first << "(" << cnt << "/" << BINANCE_PAIR_NUMBER << ")\r";
 
-		cout << std::fixed << std::setprecision(8) << variance << endl;
-	}
-	else {
-		cout << "Invalid Pair" << endl;
+		cnt++;
 	}
 
+	cout << endl;
+
+	for (const auto &elem : varianceMap) {
+		cout << std::fixed << std::setprecision(8) << elem.first << "::" << elem.second << endl;
+	}
+
+	//todo: list by biggest variance, check volume smh
+	
 	return 0;
 }
 
