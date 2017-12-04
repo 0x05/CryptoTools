@@ -2,6 +2,7 @@
 // Created by egordm on 3-12-2017.
 //
 
+#include <iostream>
 #include "api_interface.h"
 
 namespace api {
@@ -34,9 +35,8 @@ namespace api {
 
             // If we are posting data. Encode and add it. Also handle special request types
             if (method != GET && !post_data.empty()) {
-                if (method == PUT || method == DELETE)
-                    curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, method.c_str());
-                curl_easy_setopt(curl, CURLOPT_POSTFIELDS, format_data().c_str());
+                if (method == PUT || method == DELETE) curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, method.c_str());
+                curl_easy_setopt(curl, CURLOPT_COPYPOSTFIELDS, format_data().c_str());
             }
 
             res = curl_easy_perform(curl);
