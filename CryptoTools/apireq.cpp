@@ -5,6 +5,7 @@
 #include <map>
 #include <regex>
 #include <string>
+#include "utils.h"
 
 using std::cout;
 using std::endl;
@@ -41,8 +42,11 @@ int apireq::getPairBids() {
 
 	getBinaAll();
 
+	utils u;
 	cconnect getAll;
+
 	string requestData;
+	double dp = 0;
 	int cnt = 0;
 
 	for (const auto &elem : pairMap) {
@@ -65,19 +69,25 @@ int apireq::getPairBids() {
 		double ask = std::stod(sAsk);
 		
 		double variance = ask - bid;
-
-		varianceMap.insert(std::make_pair(elem.first, variance));
-
-		cout << "\r>Processing " << elem.first << "(" << cnt << "/" << BINANCE_PAIR_NUMBER << ")\r";
+	
+		dp = u.percDif(ask, bid);
+		
+		varianceMap.insert(std::make_pair(elem.first, dp));
+		
+		if (dp > 2) {
+			cout << std::fixed << elem.first << "::" << std::setprecision(2) << dp << "%::";
+			cout << std::setprecision(8) << "(" << variance << ")" << endl;
+		}
+		//cout << "\r>Processing " << elem.first << "(" << cnt << "/" << BINANCE_PAIR_NUMBER << ")\r";
 
 		cnt++;
 	}
 
 	cout << endl;
 
-	for (const auto &elem : varianceMap) {
-		cout << std::fixed << std::setprecision(8) << elem.first << "::" << elem.second << endl;
-	}
+//	for (const auto &elem : varianceMap) {
+//		cout << std::fixed << std::setprecision(2) << elem.first << "::" << elem.second << "%" << endl;
+//	}
 
 	//todo: list by biggest variance, check volume smh
 	
