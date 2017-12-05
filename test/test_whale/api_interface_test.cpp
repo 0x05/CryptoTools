@@ -38,6 +38,7 @@ TEST_F(APIInterfaceTest, test_get_parameters) {
 
     const auto &url = "https://jsonplaceholder.typicode.com/posts";
     auto req = api::Request(url, api::Request::GET);
+    req.params.emplace("userId", "1337");
     req.params = params;
 
     const auto &res = req.request();
