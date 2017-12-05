@@ -7,5 +7,8 @@ file(GLOB SOURCE_FILES
         "*.hpp"
         )
 
+set(SOURCE_FILES ${SOURCE_FILES})
+
 add_library(whale_api ${SOURCE_FILES})
+target_include_directories(whale_api PUBLIC ${JSON})
 target_link_libraries(whale_api ${CURL_LIBRARIES})

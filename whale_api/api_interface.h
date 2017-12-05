@@ -13,6 +13,7 @@
 #include <curl/curl.h>
 #include <ostream>
 #include "net_utils.hpp"
+#include "json.hpp"
 
 namespace api {
     static size_t write_callback(void *contents, size_t size, size_t nmemb, void *stream) {
@@ -25,6 +26,8 @@ namespace api {
         const std::string response;
 
         Response(CURLcode code, const std::string &response) : code(code), response(std::move(response)) {}
+
+        nlohmann::json get_json() const;
 
         bool is_succesful() const { return code == CURLE_OK; }
 
@@ -59,6 +62,10 @@ namespace api {
          */
         std::unordered_map<std::string, std::string> post_data{}; //TODO: this is a encoding format. Can be substituted by json
     protected:
+        const std::string get_url() {
+            return (url + "?" + utils::encode_url_params(params));
+        }
+
         /**
          * Format data in desired format json or x-www-form-urlencoded
          * @return
@@ -67,19 +74,13 @@ namespace api {
             return utils::encode_url_params(post_data);
         }
 
+        /**
+         * Decorate the request. Add headers, post data, etc etc
+         * @param curl
+         */
+        virtual void decorate_request(CURL * curl);
+
     public:
-        Request(const std::string &url, const std::string &method,
-                std::unordered_map<std::string, std::string> headers,
-                std::unordered_map<std::string, std::string> params,
-                std::unordered_map<std::string, std::string> post_data)
-                : url(std::move(url)), method(std::move(method)), headers(std::move(headers)),
-                  params(std::move(params)),
-                  post_data(std::move(post_data)) {}
-
-        Request(const std::string &url, const std::string &method,
-                std::unordered_map<std::string, std::string> headers)
-                : url(std::move(url)), method(std::move(method)), headers(std::move(headers)) {}
-
         Request(const std::string &url, const std::string &method) : url(std::move(url)), method(std::move(method)) {}
 
         /**
@@ -91,11 +92,22 @@ namespace api {
 
     class APIInterface {
     protected:
-        virtual const std::string get_base_endpoint() = 0;
+        const std::string api_token;
 
-        virtual const std::vector<std::string> get_base_headers() = 0;
+        virtual std::string get_base_endpoint() const = 0;
 
+        virtual void append_api_token(std::unordered_map<std::string, std::string> &headers) const = 0;
+
+        virtual std::unordered_map<std::string, std::string> get_base_headers() const {
+            auto ret = std::unordered_map<std::string, std::string>();
+            ret.emplace("Content-Type", "application/json");
+            ret.emplace("X-Requested-With", "XMLHttpRequest");
+            return ret;
+        };
     public:
+        explicit APIInterface(const std::string &api_token) : api_token(std::move(api_token)) {};
+
+        virtual Request get_request(const std::string &path, const std::string &method);
     };
 
 }
