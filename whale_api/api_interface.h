@@ -62,10 +62,6 @@ namespace api {
          */
         std::unordered_map<std::string, std::string> post_data{}; //TODO: this is a encoding format. Can be substituted by json
     protected:
-        const std::string get_url() {
-            return (url + "?" + utils::encode_url_params(params));
-        }
-
         /**
          * Format data in desired format json or x-www-form-urlencoded
          * @return
@@ -81,6 +77,10 @@ namespace api {
         virtual void decorate_request(CURL * curl);
 
     public:
+        const std::string get_url() {
+            return (url + "?" + utils::encode_url_params(params));
+        }
+
         Request(const std::string &url, const std::string &method) : url(std::move(url)), method(std::move(method)) {}
 
         /**
