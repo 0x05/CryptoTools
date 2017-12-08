@@ -6,10 +6,6 @@
 #include "api_interface.h"
 
 namespace api {
-    const std::string Request::POST = "POST";
-    const std::string Request::GET = "GET";
-    const std::string Request::DELETE = "DELETE";
-    const std::string Request::PUT = "PUT";
 
     void Request::decorate_request(CURL *curl) {
         // Add headers to the request
@@ -22,9 +18,9 @@ namespace api {
         }
 
         // If we are posting data. Encode and add it. Also handle special request types
-        if (method != GET && !post_data.empty()) {
+        if (method != GET) {
             if (method == PUT || method == DELETE) curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, method.c_str());
-            curl_easy_setopt(curl, CURLOPT_COPYPOSTFIELDS, format_data().c_str());
+            if(!post_data.empty()) curl_easy_setopt(curl, CURLOPT_COPYPOSTFIELDS, format_data().c_str());
         }
     }
 
@@ -48,7 +44,6 @@ namespace api {
             curl_easy_cleanup(curl);
         }
         curl_global_cleanup();
-
         return Response(res, str_res);
     }
 

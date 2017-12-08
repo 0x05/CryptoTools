@@ -54,3 +54,28 @@ TEST_F(WhaleAPIFixture, transactions) {
     // TODO: check if json array?
 }
 
+TEST_F(WhaleAPIFixture, new_order) {
+    const auto &response = TestRequest(api_interface->new_order(api::WhaleAPI::DIRECTION_SELL, "BTC-USD", 2000000, 18000));
+    EXPECT_THAT(response.response, testing::HasSubstr(R"("id":)"));
+}
+
+TEST_F(WhaleAPIFixture, get_order) {
+    const auto &response = TestRequest(api_interface->get_order("GbQaHMEh5JSS9K6Rq"));
+    EXPECT_THAT(response.response, testing::HasSubstr(R"("id":)"));
+}
+
+TEST_F(WhaleAPIFixture, get_orders) {
+    const auto &response = TestRequest(api_interface->get_orders(api::WhaleAPI::STATE_ACTIVE));
+    // TODO: check if json array?
+}
+
+// TODO: create orders before trying?
+TEST_F(WhaleAPIFixture, cancel_order) {
+    const auto &response = TestRequest(api_interface->cancel_order("EQDKWuj8oiZ96PgA7"));
+    EXPECT_THAT(response.response, testing::HasSubstr(R"("cancelled": true)"));
+}
+
+TEST_F(WhaleAPIFixture, close_order) {
+    const auto &response = TestRequest(api_interface->close_order("EQDKWuj8oiZ96PgA7"));
+    EXPECT_THAT(response.response, testing::HasSubstr(R"("id":)"));
+}

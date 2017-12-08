@@ -21,6 +21,11 @@ namespace api {
         return size * nmemb;
     }
 
+    static constexpr const char* POST = "POST";
+    static constexpr const char* GET = "GET";
+    static constexpr const char* DELETE = "DELETE";
+    static constexpr const char* PUT = "PUT";
+
     struct Response {
         const CURLcode code;
         const std::string response;
@@ -39,11 +44,6 @@ namespace api {
 
     class Request {
     public:
-        static const std::string POST;
-        static const std::string GET;
-        static const std::string DELETE;
-        static const std::string PUT;
-
         const std::string url;
         /**
          * Request method
@@ -100,7 +100,7 @@ namespace api {
 
         virtual std::unordered_map<std::string, std::string> get_base_headers() const {
             auto ret = std::unordered_map<std::string, std::string>();
-            ret.emplace("Content-Type", "application/json");
+            //ret.emplace("Content-Type", "application/json");
             ret.emplace("X-Requested-With", "XMLHttpRequest");
             return ret;
         };

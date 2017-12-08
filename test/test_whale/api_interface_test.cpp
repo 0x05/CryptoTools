@@ -26,7 +26,7 @@ TEST_F(APIInterfaceTest, test_url_param_encoding) {
 
 TEST_F(APIInterfaceTest, test_get_request) {
     const auto &url = "https://jsonplaceholder.typicode.com/posts/1";
-    const auto &res = api::Request(url, api::Request::GET).request();
+    const auto &res = api::Request(url, api::GET).request();
     EXPECT_EQ(res.is_succesful(), true);
     EXPECT_THAT(res.response, testing::HasSubstr("sunt aut facere"));
 }
@@ -37,7 +37,7 @@ TEST_F(APIInterfaceTest, test_get_parameters) {
     params.emplace("userId", "1337");
 
     const auto &url = "https://jsonplaceholder.typicode.com/posts";
-    auto req = api::Request(url, api::Request::GET);
+    auto req = api::Request(url, api::GET);
     req.params.emplace("userId", "1337");
     req.params = params;
 
@@ -52,7 +52,7 @@ TEST_F(APIInterfaceTest, test_post_parameters) {
     params.emplace("userId", "1337");
     const auto &url = "http://jsonplaceholder.typicode.com/posts";
 
-    auto req = api::Request(url, api::Request::POST);
+    auto req = api::Request(url, api::POST);
     req.post_data = params;
 
     const auto &res = req.request();
