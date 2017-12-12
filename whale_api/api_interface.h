@@ -26,6 +26,11 @@ namespace api {
     static constexpr const char* DELETE = "DELETE";
     static constexpr const char* PUT = "PUT";
 
+    template <typename T>
+    struct Transformer {
+        virtual T transform(nlohmann::json json) = 0;
+    };
+
     struct Response {
         const CURLcode code;
         const std::string response;

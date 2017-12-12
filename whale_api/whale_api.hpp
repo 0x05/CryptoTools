@@ -85,7 +85,6 @@ namespace api {
         Request close_order(const std::string &id) {
             return get_request("position/close/" + id, PUT);
         }
-
     };
 }
 
